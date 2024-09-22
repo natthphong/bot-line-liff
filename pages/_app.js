@@ -19,9 +19,9 @@ function MyApp({ Component, pageProps }) {
         } else {
           liff.login();
         }
-
+        
         // Set the liff object after initialization
-        console.log("set",liff)
+        // console.log("set",liff)
         setLiffObject(liff);
       } catch (error) {
         // If there is an error during initialization, set the error
