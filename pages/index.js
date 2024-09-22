@@ -2,6 +2,7 @@ import Head from "next/head";
 import packageJson from "../package.json";
 import liff from "@line/liff";
 import Link from "next/link";
+import {useEffect} from "react";
 
 export default function Home(props) {
   /** You can access to liff and liffError object through the props.
@@ -11,24 +12,37 @@ export default function Home(props) {
    *  Learn more about LIFF API documentation (https://developers.line.biz/en/reference/liff)
    **/
   const { liff, liffError } = props;
-    if (!liff){
-        return <div>Loading</div>;
+    useEffect(() => {
+        if (liff) {
+            // Check if logged in and get access token
+            if (liff.isLoggedIn()) {
+                // console.log("Access Token: ", liff.getAccessToken());
+                console.log("Access Token: ", liff.getAccessToken());
+                console.log("Version: ", liff.getVersion());
+            } else {
+                liff.login();
+            }
+        }
+    }, [liff]); // Trigger when liff is initialized
+
+    if (!liff) {
+        return <div>Loading...</div>; // Show a loading state while `liff` is being initialized
     }
-    if (liffError ) {
+
+    if (liffError) {
         return <div>Error: {liffError.message}</div>;
     }
-    console.log(liff.getAccessToken());
   // console.log(liff.getIDToken())
   // console.log(liff.getProfile())
 
   return (
     <div>
       <Head>
-        <title>LIFF Starter {liff.getAccessToken()}</title>
+        <title>LIFF Starter </title>
       </Head>
       <div className="home">
         <h1 className="home__title">
-          Welcome to <br/>
+          Welcome to {liff.getAccessToken()}<br/>
           <a
               className="home__title__link"
               href="https://developers.line.biz/en/docs/liff/overview/"
