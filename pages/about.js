@@ -16,7 +16,13 @@ export default function About(props) {
         }
     }, [liff]); // Trigger when liff is initialized
 
+    if (!liff) {
+        return <div>Loading...</div>; // Show a loading state while `liff` is being initialized
+    }
 
+    if (liffError) {
+        return <div>Error: {liffError.message}</div>;
+    }
     return (
         <div>
             <h1>About Page {liff.getAccessToken()}</h1>

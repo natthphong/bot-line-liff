@@ -25,7 +25,13 @@ export default function Home(props) {
         }
     }, [liff]); // Trigger when liff is initialized
 
+    if (!liff) {
+        return <div>Loading...</div>; // Show a loading state while `liff` is being initialized
+    }
 
+    if (liffError) {
+        return <div>Error: {liffError.message}</div>;
+    }
   // console.log(liff.getIDToken())
   // console.log(liff.getProfile())
 
@@ -36,7 +42,7 @@ export default function Home(props) {
       </Head>
       <div className="home">
         <h1 className="home__title">
-          Welcome to {liff.getAccessToken()}<br/>
+          Welcome to <br/>
           <a
               className="home__title__link"
               href="https://developers.line.biz/en/docs/liff/overview/"
