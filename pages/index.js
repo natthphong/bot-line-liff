@@ -25,13 +25,7 @@ export default function Home(props) {
         }
     }, [liff]); // Trigger when liff is initialized
 
-    if (!liff) {
-        return <div>Loading...</div>; // Show a loading state while `liff` is being initialized
-    }
 
-    if (liffError) {
-        return <div>Error: {liffError.message}</div>;
-    }
   // console.log(liff.getIDToken())
   // console.log(liff.getProfile())
 
