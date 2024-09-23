@@ -13,20 +13,25 @@ export default function MenuPage(props) {
         const fetchCategories = async () => {
             if (liff) {
                 const token = liff.getIDToken();
-                const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_API}/auth/category/list`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`,
-                    },
-                    body: JSON.stringify({
-                        page: 1,
-                        size: 10,
-                        branchCode,
-                    }),
-                });
-                const result = await response.json();
-                setCategories(result.body.message.categories);
+                try {
+                    const response = await axios.post(
+                        `${process.env.NEXT_PUBLIC_BASE_URL_API}/auth/category/list`,
+                        {
+                            page: 1,
+                            size: 10,
+                            branchCode,
+                        },
+                        {
+                            headers: {
+                                "Content-Type": "application/json",
+                                "Authorization": `Bearer ${token}`,
+                            },
+                        }
+                    );
+                    setCategories(response.data.body.message.categories);
+                } catch (error) {
+                    console.error("Error fetching categories:", error);
+                }
             }
         };
 
@@ -38,21 +43,26 @@ export default function MenuPage(props) {
 
     const fetchProducts = async (categoryCode) => {
         const token = liff.getIDToken();
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_API}/auth/product/list`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-                page: 1,
-                size: 10,
-                branchCode,
-                categoryCode
-            }),
-        });
-        const result = await response.json();
-        setProducts(result.body.message.products);
+        try {
+            const response = await axios.post(
+                `${process.env.NEXT_PUBLIC_BASE_URL_API}/auth/product/list`,
+                {
+                    page: 1,
+                    size: 10,
+                    branchCode,
+                    categoryCode,
+                },
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`,
+                    },
+                }
+            );
+            setProducts(response.data.body.message.products);
+        } catch (error) {
+            console.error("Error fetching products:", error);
+        }
     };
 
     return (

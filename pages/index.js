@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import packageJson from "../package.json";
+import axios from "axios";
 
 export default function Home(props) {
     const { liff, liffError } = props;
@@ -14,20 +15,26 @@ export default function Home(props) {
             if (liff && liff.isLoggedIn()) {
                 try {
                     const token = liff.getIDToken();
-                    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_API}/auth/branch/list`, {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Authorization": `Bearer ${token}`,
-                        },
-                        body: JSON.stringify({
+                    const response = await axios.post(
+                        `${process.env.NEXT_PUBLIC_BASE_URL_API}/auth/branch/list`,
+                        {
                             page: 1,
                             size: 10,
                             companyCode: "BAANFOOD",
                             internal: ""
-                        }),
-                    });
-                    const result = await response.json();
+                        },
+                        {
+                            headers: {
+                                "Content-Type": "application/json",
+                                "Authorization": `Bearer ${token}`,
+                            },
+                        }
+                    );
+
+                    const result = response.data; // Use Axios response structure
+                    if (result.code > 450) {
+                        liff.logout();
+                    }
                     setBranches(result.body.message.branches);
                     setLoading(false);
                 } catch (error) {
@@ -45,7 +52,6 @@ export default function Home(props) {
 
     if (loading) return <div>Loading...</div>;
     if (liffError) return <div>Error: {liffError.message}</div>;
-
     return (
         <div>
             <Head>
