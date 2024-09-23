@@ -14,10 +14,10 @@ export default function About(props) {
                 liff.login();
             }
         }
-    }, [liff]); // Trigger when liff is initialized
+    }, [liff]);
 
     if (!liff) {
-        return <div>Loading...</div>; // Show a loading state while `liff` is being initialized
+        return <div>Loading...</div>;
     }
 
     if (liffError) {

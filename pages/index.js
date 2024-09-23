@@ -1,92 +1,94 @@
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import Head from "next/head";
 import packageJson from "../package.json";
-import liff from "@line/liff";
-import Link from "next/link";
-import {useEffect} from "react";
 
 export default function Home(props) {
-  /** You can access to liff and liffError object through the props.
-   *  const { liff, liffError } = props;
-   *  console.log(liff.getVersion());
-   *
-   *  Learn more about LIFF API documentation (https://developers.line.biz/en/reference/liff)
-   **/
-  const { liff, liffError } = props;
+    const { liff, liffError } = props;
+    const router = useRouter();
+    const [branches, setBranches] = useState([]);
+    const [loading, setLoading] = useState(true);
+
     useEffect(() => {
+        const fetchBranches = async () => {
+            if (liff && liff.isLoggedIn()) {
+                try {
+                    const token = liff.getIDToken();
+                    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_API}/auth/branch/list`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${token}`,
+                        },
+                        body: JSON.stringify({
+                            page: 1,
+                            size: 10,
+                            companyCode: "BAANFOOD",
+                            internal: ""
+                        }),
+                    });
+                    const result = await response.json();
+                    setBranches(result.body.message.branches);
+                    setLoading(false);
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+        };
+
         if (liff) {
-            // Check if logged in and get access token
             if (liff.isLoggedIn()) {
-                // console.log("Access Token: ", liff.getAccessToken());
-                console.log("Access Token: ", liff.getAccessToken());
-                console.log("Version: ", liff.getVersion());
-            } else {
-                liff.login();
+                fetchBranches();
             }
         }
-    }, [liff]); // Trigger when liff is initialized
+    }, [liff]);
 
-    if (!liff) {
-        return <div>Loading...</div>; // Show a loading state while `liff` is being initialized
-    }
+    if (loading) return <div>Loading...</div>;
+    if (liffError) return <div>Error: {liffError.message}</div>;
 
-    if (liffError) {
-        return <div>Error: {liffError.message}</div>;
-    }
-  // console.log(liff.getIDToken())
-  // console.log(liff.getProfile())
+    return (
+        <div>
+            <Head>
+                <title>Baan อาหารตามสั่ง</title>
+            </Head>
+            <h1>Choose a Branch</h1>
+            <div className="branch-list">
+                {branches.map(branch => (
+                    <div
+                        key={branch.branchCode}
+                        className="branch-card"
+                        onClick={() => router.push(`/menu/${branch.branchCode}`)}
+                    >
+                        <img src="/logo_baan.png" alt="Branch logo" className="branch-logo" />
+                        <div className="branch-details">
+                            <h3>{branch.branchName}</h3>
+                            <p>{branch.branchDescription}</p>
+                        </div>
+                    </div>
+                ))}
+            </div>
 
-  return (
-    <div>
-      <Head>
-        <title>LIFF Starter </title>
-      </Head>
-      <div className="home">
-        <h1 className="home__title">
-          Welcome to <br/>
-          <a
-              className="home__title__link"
-              href="https://developers.line.biz/en/docs/liff/overview/"
-          >
-            LIFF Starter!
-          </a>
-        </h1>
-        <div className="home__badges">
-          <span className="home__badges__badge badge--primary">
-            LIFF Starter
-          </span>
-          <span className="home__badges__badge badge--secondary">nextjs</span>
-          <span className="home__badges__badge badge--primary">
-            {packageJson.version}
-          </span>
-          <a
-              href="https://github.com/line/line-liff-v2-starter"
-              target="_blank"
-              rel="noreferrer"
-              className="home__badges__badge badge--secondary"
-          >
-            GitHub
-          </a>
+            <style jsx>{`
+        .branch-list {
+          display: flex;
+          flex-wrap: wrap;
+        }
+        .branch-card {
+          width: 100%;
+          border: 1px solid #ddd;
+          margin: 10px;
+          padding: 10px;
+          border-radius: 5px;
+          cursor: pointer;
+        }
+        .branch-logo {
+          width: 100px;
+          height: 100px;
+        }
+        .branch-details {
+          margin-left: 10px;
+        }
+      `}</style>
         </div>
-        <img
-            style={{
-              width: '400px',
-              height: 'auto',
-              border: '2px solid #333',
-              boxShadow: '5px 5px 15px rgba(0, 0, 0, 0.3)',
-              borderRadius: '10px'
-            }}
-            src="https://api.omise.co/charges/chrg_test_6163go0dwvrc6e972fr/documents/docu_test_6163go2a0lhx7oprhrs/downloads/BB6A65CC7349D9CF"
-            alt="bill"/>
-        <div className="home__buttons">
-          <nav
-              rel="noreferrer"
-              className="home__buttons__button button--primary">
-            <Link href="/about">Go to About Page</Link>
-          </nav>
-
-
-        </div>
-      </div>
-    </div>
-  );
+    );
 }

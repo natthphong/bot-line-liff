@@ -2,26 +2,22 @@ import "../styles/globals.css";
 import { useState, useEffect } from "react";
 import liff from "@line/liff";
 
-
 function MyApp({ Component, pageProps }) {
   const [liffObject, setLiffObject] = useState(null);
   const [liffError, setLiffError] = useState(null);
 
-  // Execute liff.init() when the app is initialized
   useEffect(() => {
     const main = async () => {
       try {
         await liff.init({ liffId: process.env.LIFF_ID });
-
         if (liff.isLoggedIn()) {
-          console.log(liff.getAccessToken());
-          console.log(liff.getIDToken());
         } else {
           liff.login();
+          const idToken = liff.getIDToken();
+          await loginToBackend(idToken);
         }
-        
+
         // Set the liff object after initialization
-        // console.log("set",liff)
         setLiffObject(liff);
       } catch (error) {
         // If there is an error during initialization, set the error
@@ -33,6 +29,29 @@ function MyApp({ Component, pageProps }) {
     main();
 
   }, []);
+
+  const loginToBackend = async (idToken) => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_API}/login/line`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          idToken: idToken,
+        }),
+      });
+
+      if (!response.ok) {
+         new Error('Failed to login to backend');
+      }
+
+      const data = await response.json();
+      console.log("Backend login success:", data);
+    } catch (error) {
+      console.error("Error logging in to backend:", error);
+    }
+  };
 
   // Provide `liff` object and `liffError` object
   // to page component as property
