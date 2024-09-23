@@ -5,18 +5,19 @@ import liff from "@line/liff";
 function MyApp({ Component, pageProps }) {
   const [liffObject, setLiffObject] = useState(null);
   const [liffError, setLiffError] = useState(null);
-
+  const [serverLogin, setServerLogin] = useState(false);
   useEffect(() => {
     const main = async () => {
       try {
         await liff.init({ liffId: process.env.LIFF_ID });
-        if (liff.isLoggedIn()) {
-        } else {
+        if (!liff.isLoggedIn()) {
           liff.login();
-          const idToken = liff.getIDToken();
-          await loginToBackend(idToken);
         }
-
+        const idToken = liff.getIDToken();
+        if (serverLogin){
+          await loginToBackend(idToken);
+          setServerLogin(true)
+        }
         // Set the liff object after initialization
         setLiffObject(liff);
       } catch (error) {
