@@ -11,7 +11,9 @@ function MyApp({ Component, pageProps }) {
       try {
         await liff.init({ liffId: process.env.LIFF_ID });
         if (!liff.isLoggedIn()) {
+          setServerLogin(false)
           liff.login();
+
         }
         const idToken = liff.getIDToken();
         if (serverLogin){

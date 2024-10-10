@@ -14,6 +14,7 @@ export default function Home(props) {
         const fetchBranches = async () => {
             if (liff && liff.isLoggedIn()) {
                 try {
+                    console.log("hello")
                     const token = liff.getIDToken();
                     const response = await axios.post(
                         `${process.env.NEXT_PUBLIC_BASE_URL_API}/auth/branch/list`,
@@ -30,14 +31,18 @@ export default function Home(props) {
                             },
                         }
                     );
-
+                    console.log(response)
                     const result = response.data; // Use Axios response structure
-                    if (result.code > 450) {
+                    console.log("result" ,result)
+                    if (result.status === 401 ||result.code > 450) {
                         liff.logout();
                     }
                     setBranches(result.body.message.branches);
                     setLoading(false);
                 } catch (error) {
+                    if (error.status === 401 ||error.code > 450) {
+                        liff.logout();
+                    }
                     console.error(error);
                 }
             }
