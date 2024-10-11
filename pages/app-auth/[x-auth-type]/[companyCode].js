@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import {apiCall} from "../../../utils/api";
+import {apiCall} from "../../utils/api";
 
 
 export default function RedirectPage(props) {
