@@ -36,6 +36,12 @@ export async function apiCall({
         return response.data;
     } catch (error) {
         console.error(`API call error to ${url}:`, error.response || error);
+        if (error.response.status === 401) {
+            if (authType === "line" && liff){
+                liff.logout();
+            }
+
+        }
         throw error.response?.data || error.message;
     }
 }
