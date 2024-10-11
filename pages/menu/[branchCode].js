@@ -30,11 +30,11 @@ export default function MenuPage(props) {
                     url: "/auth/category/list",
                     method: "POST",
                     authType,
-                    body: { page: 1, size: 10, branchCode },
+                    body: { page: 1, size: 99999, branchCode },
                     liff,
                 });
 
-                setCategories(data.message.categories);
+                setCategories(data.body.message.categories);
             } catch (error) {
                 console.error("Error fetching categories:", error);
             }
@@ -57,8 +57,8 @@ export default function MenuPage(props) {
                 liff,
             });
 
-            setProducts(data.message.products);
-            setTotalProducts(data.message.totalCount);  // Assuming the total count is returned
+            setProducts(data.body.message.products);
+            setTotalProducts(data.body.message.totalCount);  // Assuming the total count is returned
         } catch (error) {
             console.error("Error fetching products:", error);
         }
@@ -120,7 +120,7 @@ export default function MenuPage(props) {
                 </tr>
                 </thead>
                 <tbody>
-                {products.map((product) => (
+                {products && products.map((product) => (
                     <tr key={product.productCode}>
                         <td>{product.productNameEng}</td>
                         <td>{product.productDescription}</td>

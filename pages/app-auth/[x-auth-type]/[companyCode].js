@@ -22,7 +22,7 @@ export default function RedirectPage(props) {
                     liff
                 });
 
-                setCompany(data.message);
+                setCompany(data.body.message);
                 setLoading(false);
             } catch (error) {
                 console.error("Error fetching company details:", error);
@@ -51,6 +51,7 @@ export default function RedirectPage(props) {
     if (!company) {
         return <p>Company details not found.</p>;
     }
+    console.log(company)
 
     return (
         <div style={{ textAlign: 'center', padding: '20px' }}>
@@ -59,7 +60,7 @@ export default function RedirectPage(props) {
 
             {/* Display company logo */}
             <img
-                src={company.companyPicture || "/default-image.png"}  // Use a default image if companyPicture is null
+                src={company.companyPicture || "/logo_baan.png"}  // Use a default image if companyPicture is null
                 alt="Company Logo"
                 style={{
                     width: "200px",
