@@ -11,7 +11,7 @@ export default function Home(props) {
     const [page, setPage] = useState(1);
     const [size, setSize] = useState(10);
     const [totalBranches, setTotalBranches] = useState(0);
-
+    const [totalPages, setTotalPages] = useState(0);
     useEffect(() => {
         const fetchBranches = async () => {
             let authType = localStorage.getItem("x-auth-type");
@@ -46,6 +46,7 @@ export default function Home(props) {
 
                     setBranches(data.body.message.branches);
                     setTotalBranches(data.body.message.totalCount);
+                    setTotalPages(Math.ceil(data.body.message.totalCount / size));
                     setLoading(false);
                 } catch (error) {
                     if (error.status === 401 || error.code > 450) {
@@ -63,7 +64,14 @@ export default function Home(props) {
 
 
     const handlePageChange = (newPage) => {
+        if (newPage < 1) {
+            newPage = 1;
+        }
+        if (newPage > totalPages) {
+            newPage = totalPages;
+        }
         setPage(newPage);
+
     };
 
 
@@ -126,7 +134,7 @@ export default function Home(props) {
                 </button>
                 <span>{`Page ${page}`}</span>
                 <button
-                    disabled={page * size >= totalBranches}
+                    disabled={page >= totalPages}
                     onClick={() => handlePageChange(page + 1)}
                 >
                     Next

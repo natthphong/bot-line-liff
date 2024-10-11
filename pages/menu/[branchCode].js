@@ -14,7 +14,7 @@ export default function MenuPage(props) {
     const [page, setPage] = useState(1);
     const [size, setSize] = useState(10);
     const [totalProducts, setTotalProducts] = useState(0);
-
+    const [totalPages, setTotalPages] = useState(0);
     useEffect(() => {
         const storedAuthType = localStorage.getItem("x-auth-type");
         setAuthType(storedAuthType);
@@ -55,12 +55,20 @@ export default function MenuPage(props) {
 
             setProducts(data.body.message.products);
             setTotalProducts(data.body.message.totalCount);
+
+            setTotalPages(Math.ceil(data.body.message.totalCount / size));
         } catch (error) {
             console.error("Error fetching products:", error);
         }
     };
 
     const handlePageChange = (newPage) => {
+        if (newPage < 1) {
+            newPage = 1;
+        }
+        if (newPage > totalPages) {
+            newPage = totalPages;
+        }
         setPage(newPage);
         fetchProducts(selectedCategory);
     };
@@ -162,7 +170,7 @@ export default function MenuPage(props) {
                 </button>
                 <span>{`Page ${page}`}</span>
                 <button
-                    disabled={page * size >= totalProducts}
+                    disabled={page >= totalPages}
                     onClick={() => handlePageChange(page + 1)}
                 >
                     Next
