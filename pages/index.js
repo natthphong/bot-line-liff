@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
-import { apiCall } from "./utils/api";  // Import your apiCall utility
+import { apiCall } from "utils/api";
 
 export default function Home(props) {
     const { liff, liffError } = props;
