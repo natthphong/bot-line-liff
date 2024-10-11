@@ -8,9 +8,11 @@ export default function MenuPage(props) {
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState("");
     const [products, setProducts] = useState([]);
-    let authType = localStorage.getItem("x-auth-type");
+    const [authType, setAuthType] = useState(null);  // Use state for authType
 
     useEffect(() => {
+        const storedAuthType = localStorage.getItem("x-auth-type");
+        setAuthType(storedAuthType);
         const fetchCategories = async () => {
             if (liff) {
                 const token = liff.getIDToken();
