@@ -168,7 +168,7 @@ export default function MenuPage(props) {
                 >
                     Previous
                 </button>
-                <span>{`Page ${page}`}</span>
+                <span>{`Page ${page}` `Total Page ${totalPages}`}</span>
                 <button
                     disabled={page >= totalPages}
                     onClick={() => handlePageChange(page + 1)}
