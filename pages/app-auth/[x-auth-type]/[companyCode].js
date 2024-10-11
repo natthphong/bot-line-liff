@@ -5,12 +5,12 @@ export default function RedirectPage() {
     const router = useRouter();
     const { "x-auth-type": authType, companyCode } = router.query;
 
-    useEffect(() => {
+    useEffect(async () => {
         if (authType && companyCode) {
             // Store x-auth-type and companyCode in localStorage
             localStorage.setItem("x-auth-type", authType);
             localStorage.setItem("companyCode", companyCode);
-
+            await router.push("/");
         }
     }, [authType, companyCode, router]);
 
