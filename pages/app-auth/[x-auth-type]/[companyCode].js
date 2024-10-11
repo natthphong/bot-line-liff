@@ -7,11 +7,9 @@ export default function RedirectPage() {
 
     useEffect( () => {
         if (authType && companyCode) {
-            // Store x-auth-type and companyCode in localStorage
             localStorage.setItem("x-auth-type", authType);
             localStorage.setItem("companyCode", companyCode);
-            // await router.push("/");
-            handleRedirect()
+            //TODO company details
         }
     }, [authType, companyCode, router]);
 
