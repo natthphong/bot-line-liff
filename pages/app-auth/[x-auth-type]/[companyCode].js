@@ -11,6 +11,7 @@ export default function RedirectPage() {
             localStorage.setItem("x-auth-type", authType);
             localStorage.setItem("companyCode", companyCode);
             // await router.push("/");
+            handleRedirect()
         }
     }, [authType, companyCode, router]);
 
