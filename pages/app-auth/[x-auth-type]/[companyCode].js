@@ -60,18 +60,18 @@ export default function RedirectPage(props) {
 
             {/* Display company logo */}
             <img
-                src={company.companyPicture || "/logo_baan.png"}  // Use a default image if companyPicture is null
+                src={company.companyPicture || "/logo_baan.png"}
                 alt="Company Logo"
                 style={{
                     width: "200px",
                     height: "200px",
-                    borderRadius: "50%",  // Circle image
+                    borderRadius: "50%",
                     display: "block",
                     margin: "0 auto",
-                    opacity: company.inActive === 'N' ? 0.5 : 1,  // Grayed out if inactive
-                    cursor: company.inActive === 'N' ? 'not-allowed' : 'pointer',  // No pointer if inactive
+                    opacity: company.inActive === 'N' ? 0.5 : 1,
+                    cursor: company.inActive === 'N' ? 'not-allowed' : 'pointer',
                 }}
-                onClick={company.inActive === 'Y' ? handleRedirect : null}  // Redirect only if company is active
+                onClick={company.inActive === 'Y' ? handleRedirect : null}
             />
 
             {/* Display company description */}
@@ -82,11 +82,11 @@ export default function RedirectPage(props) {
                 onClick={handleRedirect}
                 disabled={company.inActive === 'N'}
                 style={{
-                    backgroundColor: company.inActive === 'N' ? 'gray' : '#0070f3',  // Gray if inactive
+                    backgroundColor: company.inActive === 'N' ? 'gray' : '#0070f3',
                     color: 'white',
                     padding: '10px 20px',
                     border: 'none',
-                    cursor: company.inActive === 'N' ? 'not-allowed' : 'pointer',  // Disabled cursor if inactive
+                    cursor: company.inActive === 'N' ? 'not-allowed' : 'pointer',
                     opacity: company.inActive === 'N' ? 0.6 : 1,
                 }}
             >

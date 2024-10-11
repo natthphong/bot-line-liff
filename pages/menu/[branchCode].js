@@ -11,18 +11,15 @@ export default function MenuPage(props) {
     const [products, setProducts] = useState([]);
     const [authType, setAuthType] = useState(null);
 
-    // Pagination state
     const [page, setPage] = useState(1);
     const [size, setSize] = useState(10);
     const [totalProducts, setTotalProducts] = useState(0);
 
-    // Get authType from localStorage on component mount
     useEffect(() => {
         const storedAuthType = localStorage.getItem("x-auth-type");
         setAuthType(storedAuthType);
     }, []);
 
-    // Fetch categories when the component mounts or branchCode changes
     useEffect(() => {
         const fetchCategories = async () => {
             try {
@@ -42,11 +39,10 @@ export default function MenuPage(props) {
 
         if (branchCode && liff && liff.isLoggedIn() && authType) {
             fetchCategories();
-            fetchProducts("");  // Fetch products without category to load initial list
+            fetchProducts("");
         }
     }, [branchCode, liff, authType, page, size]);
 
-    // Fetch products based on selected category and pagination
     const fetchProducts = async (categoryCode) => {
         try {
             const data = await apiCall({
@@ -58,23 +54,21 @@ export default function MenuPage(props) {
             });
 
             setProducts(data.body.message.products);
-            setTotalProducts(data.body.message.totalCount);  // Assuming the total count is returned
+            setTotalProducts(data.body.message.totalCount);
         } catch (error) {
             console.error("Error fetching products:", error);
         }
     };
 
-    // Handle page change for pagination
     const handlePageChange = (newPage) => {
         setPage(newPage);
-        fetchProducts(selectedCategory);  // Refetch products with the updated page
+        fetchProducts(selectedCategory);
     };
 
-    // Handle size change for pagination
     const handleSizeChange = (newSize) => {
         setSize(newSize);
-        setPage(1);  // Reset to page 1 when size changes
-        fetchProducts(selectedCategory);  // Refetch products with the updated size
+        setPage(1);
+        fetchProducts(selectedCategory);
     };
 
     return (
@@ -88,7 +82,7 @@ export default function MenuPage(props) {
                     value={selectedCategory}
                     onChange={(e) => {
                         setSelectedCategory(e.target.value);
-                        fetchProducts(e.target.value);  // Fetch products for selected category
+                        fetchProducts(e.target.value);
                     }}
                 >
                     <option value="">Select a category</option>
@@ -117,14 +111,42 @@ export default function MenuPage(props) {
                     <th>Product Name</th>
                     <th>Description</th>
                     <th>Price</th>
+                    <th>Quantity</th> {/* Show quantity for FOOD items */}
+                    <th>Image</th> {/* Show product image */}
                 </tr>
                 </thead>
                 <tbody>
                 {products && products.map((product) => (
-                    <tr key={product.productCode}>
-                        <td>{product.productNameEng}</td>
+                    <tr
+                        key={product.productCode}
+                        onClick={() => {
+                            // Only redirect if the product is active
+                            if (product.inActive === 'Y') {
+                                localStorage.setItem("product",product)
+                                router.push(`/menu/product/${product.productCode}`);
+                            }
+                        }}
+                        style={{
+                            cursor: product.inActive === 'Y' ? 'pointer' : 'not-allowed',
+                            opacity: product.inActive === 'Y' ? 1 : 0.5, // Disabled effect for inactive products
+                        }}
+                    >
+                        {/* Show productNameTh for FOOD */}
+                        <td>{product.productType === 'FOOD' ? product.productNameTh : product.productNameEng}</td>
                         <td>{product.productDescription}</td>
                         <td>{product.amount}</td>
+
+                        {/* Show productQuantity if productType is FOOD */}
+                        <td>{product.productType === 'FOOD' ? product.productQuantity : '-'}</td>
+
+                        {/* Show productImage or fallback to default image */}
+                        <td>
+                            <img
+                                src={product.productImage || "/product-image.png"}
+                                alt={product.productNameEng}
+                                style={{ width: "50px", height: "50px" }}
+                            />
+                        </td>
                     </tr>
                 ))}
                 </tbody>
@@ -160,6 +182,10 @@ export default function MenuPage(props) {
                 button {
                     margin: 5px;
                     padding: 5px 10px;
+                }
+                img {
+                    display: block;
+                    margin: 0 auto;
                 }
             `}</style>
         </div>

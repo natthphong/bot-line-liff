@@ -97,7 +97,10 @@ export default function Home(props) {
                     <div
                         key={branch.branchCode}
                         className="branch-card"
-                        onClick={() => router.push(`/menu/${branch.branchCode}`)}
+                        onClick={() => {
+                            localStorage.setItem("branchCode",branch.branchCode)
+                            router.push(`/menu/${branch.branchCode}`)
+                        }}
                     >
                         <img src="/logo_baan.png" alt="Branch logo" className="branch-logo" />
                         <div className="branch-details">
