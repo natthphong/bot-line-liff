@@ -24,7 +24,7 @@ export default function ProductDetailsPage(props) {
                 console.log("branchCode", branchCode)
                 console.log("storedProduct", storedProduct)
                 console.log("companyCode", companyCode)
-                setProduct(storedProduct);
+                console.log("product", product)
                 // if (liff && branchCode && productCode) {
                 //     const data = await apiCall({
                 //         url: "/auth/product-details/inquiry",
