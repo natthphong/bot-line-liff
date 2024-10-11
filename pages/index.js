@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
-import packageJson from "../package.json";
 import axios from "axios";
 
 export default function Home(props) {
@@ -12,35 +11,39 @@ export default function Home(props) {
 
     useEffect(() => {
         const fetchBranches = async () => {
-            if (liff && liff.isLoggedIn()) {
+            const authType = localStorage.getItem("x-auth-type");
+            const companyCode = localStorage.getItem("companyCode");
+
+            if (liff && liff.isLoggedIn() ) {
+                if (companyCode===""){
+                    companyCode ="BAANFOOD"
+                }
                 try {
-                    console.log("hello")
                     const token = liff.getIDToken();
                     const response = await axios.post(
                         `${process.env.NEXT_PUBLIC_BASE_URL_API}/auth/branch/list`,
                         {
                             page: 1,
                             size: 10,
-                            companyCode: "BAANFOOD",
+                            companyCode: companyCode,
                             internal: ""
                         },
                         {
                             headers: {
                                 "Content-Type": "application/json",
                                 "Authorization": `Bearer ${token}`,
+                                "x-auth-type": authType,
                             },
                         }
                     );
-                    console.log(response)
-                    const result = response.data; // Use Axios response structure
-                    console.log("result" ,result)
-                    if (result.status === 401 ||result.code > 450) {
+                    const result = response.data;
+                    if (result.status === 401 || result.code > 450) {
                         liff.logout();
                     }
                     setBranches(result.body.message.branches);
                     setLoading(false);
                 } catch (error) {
-                    if (error.status === 401 ||error.code > 450) {
+                    if (error.status === 401 || error.code > 450) {
                         liff.logout();
                     }
                     console.error(error);
@@ -64,7 +67,7 @@ export default function Home(props) {
             </Head>
             <h1>Choose a Branch</h1>
             <div className="branch-list">
-                {branches.map(branch => (
+                {branches && branches.map(branch => (
                     <div
                         key={branch.branchCode}
                         className="branch-card"
