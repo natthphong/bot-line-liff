@@ -8,6 +8,7 @@ export default function MenuPage(props) {
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState("");
     const [products, setProducts] = useState([]);
+    let authType = localStorage.getItem("x-auth-type");
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -18,6 +19,7 @@ export default function MenuPage(props) {
                     headers: {
                         "Content-Type": "application/json",
                         "Authorization": `Bearer ${token}`,
+                        "x-auth-type": authType,
                     },
                     body: JSON.stringify({
                         page: 1,
@@ -43,6 +45,7 @@ export default function MenuPage(props) {
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${token}`,
+                "x-auth-type": authType,
             },
             body: JSON.stringify({
                 page: 1,
