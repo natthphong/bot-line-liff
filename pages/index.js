@@ -11,12 +11,15 @@ export default function Home(props) {
 
     useEffect(() => {
         const fetchBranches = async () => {
-            const authType = localStorage.getItem("x-auth-type");
-            const companyCode = localStorage.getItem("companyCode");
+            let authType = localStorage.getItem("x-auth-type");
+            let companyCode = localStorage.getItem("companyCode");
 
             if (liff && liff.isLoggedIn() ) {
                 if (companyCode===""){
                     companyCode ="BAANFOOD"
+                }
+                if (authType===""){
+                    authType ="line"
                 }
                 try {
                     const token = liff.getIDToken();
