@@ -15,23 +15,24 @@ export default function ProductDetailsPage(props) {
                 const branchCode = localStorage.getItem("branchCode");
                 const storedProduct = JSON.parse(localStorage.getItem("product"));
                 const companyCode = localStorage.getItem("companyCode") || "BAANFOOD";
-
-                if (liff && branchCode && productCode) {
-                    const data = await apiCall({
-                        url: "/auth/product-details/inquiry",
-                        method: "POST",
-                        authType: localStorage.getItem("x-auth-type"),
-                        body: {
-                            productCode,
-                            branchCode,
-                            companyCode
-                        },
-                        liff: liff
-                    });
-                    console.log("data",data)
-                    setProduct(storedProduct);
-                    setLoading(false);
-                }
+                setProduct(storedProduct);
+                setLoading(false);
+                // if (liff && branchCode && productCode) {
+                //     const data = await apiCall({
+                //         url: "/auth/product-details/inquiry",
+                //         method: "POST",
+                //         authType: localStorage.getItem("x-auth-type"),
+                //         body: {
+                //             productCode,
+                //             branchCode,
+                //             companyCode
+                //         },
+                //         liff: liff
+                //     });
+                //     console.log("data",data)
+                //     setProduct(storedProduct);
+                //     setLoading(false);
+                // }
             } catch (error) {
                 console.error("Error fetching product details:", error);
             }
@@ -61,7 +62,7 @@ export default function ProductDetailsPage(props) {
             )}
 
             {/* Show quantity if productType is FOOD */}
-            {product.productType === "FOOD" && (
+            {product.productType !== "FOOD" && (
                 <p>Quantity: {product.productQuantity}</p>
             )}
 

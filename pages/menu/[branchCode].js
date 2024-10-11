@@ -132,12 +132,12 @@ export default function MenuPage(props) {
                         }}
                     >
                         {/* Show productNameTh for FOOD */}
-                        <td>{product.productType === 'FOOD' ? product.productNameTh : product.productNameEng}</td>
+                        <td>{product.productType !== 'FOOD' ? product.productNameTh : product.productNameEng}</td>
                         <td>{product.productDescription}</td>
                         <td>{product.amount}</td>
 
                         {/* Show productQuantity if productType is FOOD */}
-                        <td>{product.productType === 'FOOD' ? product.productQuantity : '-'}</td>
+                        <td>{product.productType !== 'FOOD' ? product.productQuantity : '-'}</td>
 
                         {/* Show productImage or fallback to default image */}
                         <td>
