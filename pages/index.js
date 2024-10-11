@@ -8,9 +8,9 @@ export default function Home(props) {
     const router = useRouter();
     const [branches, setBranches] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [page, setPage] = useState(1);  // State for current page
-    const [size, setSize] = useState(10);  // State for size (number of branches per page)
-    const [totalBranches, setTotalBranches] = useState(0);  // State for total number of branches
+    const [page, setPage] = useState(1);
+    const [size, setSize] = useState(10);
+    const [totalBranches, setTotalBranches] = useState(0);
 
     useEffect(() => {
         const fetchBranches = async () => {
@@ -18,22 +18,22 @@ export default function Home(props) {
             let companyCode = localStorage.getItem("companyCode");
 
             if (!companyCode) {
-                companyCode = "BAANFOOD";  // Fallback value if companyCode is empty
+                companyCode = "BAANFOOD";
             }
             if (!authType) {
-                authType = "line";  // Fallback value if authType is empty
+                authType = "line";
             }
 
             if (liff && liff.isLoggedIn()) {
                 try {
-                    // Use the apiCall utility to fetch branches
+
                     const data = await apiCall({
                         url: "/auth/branch/list",
                         method: "POST",
                         authType,
                         body: {
-                            page: page,  // Fetch the current page
-                            size: size,  // Fetch the specified size per page
+                            page: page,
+                            size: size,
                             companyCode,
                             internal: ""
                         },
@@ -45,7 +45,7 @@ export default function Home(props) {
                     }
 
                     setBranches(data.body.message.branches);
-                    setTotalBranches(data.body.message.totalCount);  // Assuming totalCount is returned from the API
+                    setTotalBranches(data.body.message.totalCount);
                     setLoading(false);
                 } catch (error) {
                     if (error.status === 401 || error.code > 450) {
@@ -57,18 +57,18 @@ export default function Home(props) {
         };
 
         if (liff && liff.isLoggedIn()) {
-            fetchBranches();  // Fetch branches when liff is ready
+            fetchBranches();
         }
-    }, [liff, page, size]);  // Re-fetch data when page or size changes
+    }, [liff, page, size]);
 
-    // Handle page change
+
     const handlePageChange = (newPage) => {
         setPage(newPage);
     };
 
-    // Handle page size change
+
     const handleSizeChange = (event) => {
-        setSize(Number(event.target.value));  // Set new size from dropdown and reset to page 1
+        setSize(Number(event.target.value));
         setPage(1);
     };
 
@@ -102,7 +102,12 @@ export default function Home(props) {
                             router.push(`/menu/${branch.branchCode}`)
                         }}
                     >
-                        <img src="/logo_baan.png" alt="Branch logo" className="branch-logo" />
+                        <img
+                            src={branch.branchPicture || "/logo_baan.png"}
+                            alt="Branch logo"
+                            className="branch-logo"
+                        />
+
                         <div className="branch-details">
                             <h3>{branch.branchName}</h3>
                             <p>{branch.branchDescription}</p>
