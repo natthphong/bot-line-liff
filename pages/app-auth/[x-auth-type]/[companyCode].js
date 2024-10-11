@@ -11,10 +11,10 @@ export default function RedirectPage() {
             localStorage.setItem("x-auth-type", authType);
             localStorage.setItem("companyCode", companyCode);
 
-            // Redirect to the home page
-            router.push("/");
+            // // Redirect to the home page router.push("/");
+
         }
     }, [authType, companyCode, router]);
 
-    return <div>Redirecting...</div>;
+    return <div>`TEST...${authType} ${companyCode}`</div>;
 }
