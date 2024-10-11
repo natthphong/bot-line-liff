@@ -16,7 +16,7 @@ export default function RedirectPage(props) {
                 const token = liff.getIDToken();
 
                 // Make a POST request with headers
-                const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_API}/company/inquiry`, {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_API}/auth/company/inquiry`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
