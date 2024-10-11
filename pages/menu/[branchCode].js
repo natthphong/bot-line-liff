@@ -120,15 +120,15 @@ export default function MenuPage(props) {
                     <tr
                         key={product.productCode}
                         onClick={() => {
-                            // Only redirect if the product is active
+
                             if (product.inActive === 'Y') {
-                                localStorage.setItem("product",product)
+                                localStorage.setItem("product", JSON.stringify(product));
                                 router.push(`/menu/product/${product.productCode}`);
                             }
                         }}
                         style={{
                             cursor: product.inActive === 'Y' ? 'pointer' : 'not-allowed',
-                            opacity: product.inActive === 'Y' ? 1 : 0.5, // Disabled effect for inactive products
+                            opacity: product.inActive === 'Y' ? 1 : 0.5,
                         }}
                     >
                         {/* Show productNameTh for FOOD */}

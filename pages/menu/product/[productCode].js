@@ -1,11 +1,10 @@
-import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import { apiCall } from "utils/api";
+import {useEffect, useState} from "react";
+import {useRouter} from "next/router";
 
 export default function ProductDetailsPage(props) {
-    const { liff } = props;
+    const {liff} = props;
     const router = useRouter();
-    const { productCode } = router.query;
+    const {productCode} = router.query;
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -13,10 +12,19 @@ export default function ProductDetailsPage(props) {
         const fetchProductDetails = async () => {
             try {
                 const branchCode = localStorage.getItem("branchCode");
-                const storedProduct = JSON.parse(localStorage.getItem("product"));
+                const storedProduct = localStorage.getItem("product");
                 const companyCode = localStorage.getItem("companyCode") || "BAANFOOD";
-                setProduct(storedProduct);
+
+                if (storedProduct) {
+                    setProduct(JSON.parse(storedProduct));
+                } else {
+                    console.error("Product not found in localStorage");
+                }
                 setLoading(false);
+                console.log("branchCode", branchCode)
+                console.log("storedProduct", storedProduct)
+                console.log("companyCode", companyCode)
+                setProduct(storedProduct);
                 // if (liff && branchCode && productCode) {
                 //     const data = await apiCall({
                 //         url: "/auth/product-details/inquiry",
@@ -39,7 +47,7 @@ export default function ProductDetailsPage(props) {
         };
 
         fetchProductDetails();
-    }, [liff,productCode]);
+    }, [liff, productCode]);
 
     if (loading) return <div>Loading product details...</div>;
 
@@ -54,9 +62,9 @@ export default function ProductDetailsPage(props) {
             {product.productType === "FOOD" && (
                 <div>
                     <img
-                        src={product.productImage || "/product-image.png"}  // Fallback to default image
+                        src={product.productImage || "/product-image.png"}
                         alt={product.productNameEng}
-                        style={{ width: "200px", height: "200px" }}
+                        style={{width: "200px", height: "200px"}}
                     />
                 </div>
             )}
