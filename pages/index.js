@@ -40,18 +40,11 @@ export default function Home(props) {
                         liff
                     });
 
-                    if (data.status === 401 || data.code > 450) {
-                        liff.logout();
-                    }
-
                     setBranches(data.body.message.branches);
                     setTotalBranches(data.body.message.totalCount);
                     setTotalPages(Math.ceil(data.body.message.totalCount / size));
                     setLoading(false);
                 } catch (error) {
-                    if (error.status === 401 || error.code > 450) {
-                        liff.logout();
-                    }
                     console.error("Error fetching branches:", error);
                 }
             }
